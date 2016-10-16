@@ -252,29 +252,6 @@
         [self.selectedDataArr removeObject:self.dataArr[indexPath.row]];
     }
 }
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return @"删除";
-}
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.dataArr removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-    }
-    else if (editingStyle == UITableViewCellEditingStyleInsert)
-    {
-        
-    }
-    else
-    {
-        
-    }
-}
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
@@ -290,8 +267,6 @@
  */
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    return UITableViewCellEditingStyleDelete;
     /*
      UITableView 编辑状态的样式有如下三种：
         UITableViewCellEditingStyleNone：cell往右缩进，但是左边不出现任何控件
@@ -306,6 +281,44 @@
     {
         return UITableViewCellEditingStyleDelete;
     }
+}
+
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //添加一个删除按钮
+    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        //处理数据
+        [self.dataArr removeObjectAtIndex:indexPath.row];
+        //更新UI
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }];
+    
+    //添加一个上移按钮
+    UITableViewRowAction *upAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"上移" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        if (indexPath.row > 0) {
+            //处理数据
+            [self.dataArr exchangeObjectAtIndex:indexPath.row withObjectAtIndex:indexPath.row - 1];
+            //更新UI
+            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }];
+    
+    //添加一个下移按钮
+    UITableViewRowAction *downAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"下移" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        if (indexPath.row < self.dataArr.count - 1) {
+            [self.dataArr exchangeObjectAtIndex:indexPath.row withObjectAtIndex:indexPath.row + 1];
+            //更新UI
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section]] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }];
+    
+    //设置背景颜色
+    downAction.backgroundColor = [UIColor colorWithRed:(arc4random()%256)/255.0 green:(arc4random()%256)/255.0 blue:(arc4random()%256)/255.0 alpha:1];
+    
+    //放回数组返回
+    return @[deleteAction, upAction, downAction];
 }
 
 @end

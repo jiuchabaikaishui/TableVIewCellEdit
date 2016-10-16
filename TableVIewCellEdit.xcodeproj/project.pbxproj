@@ -498,6 +498,7 @@
 				6EEE900A1DAC9908000DFB65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6EEE900B1DAC9908000DFB65 /* Build configuration list for PBXNativeTarget "TableVIewCellEditTests" */ = {
 			isa = XCConfigurationList;
@@ -506,6 +507,7 @@
 				6EEE900D1DAC9908000DFB65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6EEE900E1DAC9908000DFB65 /* Build configuration list for PBXNativeTarget "TableVIewCellEditUITests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +516,7 @@
 				6EEE90101DAC9908000DFB65 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
